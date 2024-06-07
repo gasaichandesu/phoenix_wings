@@ -3,11 +3,10 @@ import 'dart:math';
 
 import 'package:phoenix_wings/src/phoenix_channel.dart';
 import 'package:phoenix_wings/src/phoenix_connection.dart';
+import 'package:phoenix_wings/src/phoenix_io_connection.dart';
 import 'package:phoenix_wings/src/phoenix_message.dart';
 import 'package:phoenix_wings/src/phoenix_serializer.dart';
 import 'package:phoenix_wings/src/phoenix_socket_options.dart';
-
-import 'package:phoenix_wings/src/phoenix_io_connection.dart';
 
 class PhoenixSocket {
   Uri? _endpoint;
@@ -84,7 +83,7 @@ class PhoenixSocket {
   /// Attempts to make a WebSocket connection to your backend
   ///
   /// If the attempt fails, retries will be triggered at intervals specified
-  /// by retryAfterIntervalMS
+  /// by retryAfterIntervalMS and onError callback is triggered
   connect() async {
     if (_conn != null) {
       return;
@@ -100,6 +99,8 @@ class PhoenixSocket {
         _conn = null;
         print(
             "WebSocket connection to ${_endpoint.toString()} failed!: $reason");
+
+        _stateChangeCallbacks.error.forEach((cb) => cb(reason));
 
         var wait = reconnectAfterMs[min(tries, reconnectAfterMs.length - 1)];
         await new Future.delayed(new Duration(milliseconds: wait));
