@@ -3,18 +3,17 @@
 import 'dart:async';
 
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:phoenix_wings/src/phoenix_channel.dart';
 import 'package:phoenix_wings/src/phoenix_push.dart';
 import 'package:phoenix_wings/src/phoenix_socket.dart';
 import 'package:test/test.dart';
-import 'package:mockito/mockito.dart';
+
 import 'phoenix_push_test.mocks.dart';
 
 @GenerateMocks([], customMocks: [
-  MockSpec<PhoenixChannel>(
-      as: #MockPhoenixChannel, returnNullOnMissingStub: true),
-  MockSpec<PhoenixSocket>(
-      as: #MockPhoenixSocket, returnNullOnMissingStub: true),
+  MockSpec<PhoenixChannel>(as: #MockPhoenixChannel),
+  MockSpec<PhoenixSocket>(as: #MockPhoenixSocket),
 ])
 void main() {
   late MockPhoenixSocket socket;
